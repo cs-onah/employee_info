@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 
 import 'dart:math' as math;
 
+import 'package:intl/intl.dart' as intl;
+
 part 'calendar_picker.dart';
 
 // Sun - Sat
@@ -22,6 +24,8 @@ const List<String> shortWeekdays = <String>[
 
 const firstDayOfWeekIndex = 0;
 
+final dateDisplayFormat = intl.DateFormat.yMMMd();
+
 class AppDatePicker extends StatelessWidget {
   const AppDatePicker({super.key});
 
@@ -30,11 +34,14 @@ class AppDatePicker extends StatelessWidget {
         context: context,
         builder: (context) {
           return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: CalendarDatePicker(
               initialDate: DateTime.now(),
               firstDate: DateTime(2023),
               lastDate: DateTime(2024),
-              onDateChanged: (date){},
+              onDateChanged: (date) {},
             ),
           );
         });
