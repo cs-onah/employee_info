@@ -89,10 +89,16 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
               child: InkWell(
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (_) => AddEmployeeScreen(employee: employee)),
+                    builder: (_) => AddEmployeeScreen(employee: employee),
+                  ),
                 ),
                 child: Container(
-                  color: Colors.white,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(color: AppColors.outlineGreyColor),
+                    ),
+                  ),
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
