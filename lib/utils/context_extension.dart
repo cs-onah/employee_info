@@ -26,8 +26,10 @@ extension BuildContextExt on BuildContext {
               const Icon(Icons.cancel, color: Colors.white),
               const SizedBox(width: 10),
               Expanded(
-                child:
-                    Text("$error", style: const TextStyle(color: Colors.white)),
+                child: Text(
+                  "$error",
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -99,8 +101,11 @@ extension BuildContextExt on BuildContext {
     RoutePredicate predicate, {
     Object? arguments,
   }) =>
-      Navigator.of(this).pushNamedAndRemoveUntil(newRouteName, predicate,
-          arguments: arguments);
+      Navigator.of(this).pushNamedAndRemoveUntil(
+        newRouteName,
+        predicate,
+        arguments: arguments,
+      );
 
   void closeDrawer() => Scaffold.of(this).closeDrawer();
 }
