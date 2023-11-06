@@ -1,15 +1,23 @@
 import 'package:employee_list_assessment/constants/app_colors.dart';
+import 'package:employee_list_assessment/models/employee.dart';
 import 'package:employee_list_assessment/utils/context_extension.dart';
 import 'package:employee_list_assessment/widgets/date_picker/date_picker.dart';
 import 'package:flutter/material.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
-  const AddEmployeeScreen({super.key});
+  final Employee? employee;
+  const AddEmployeeScreen({super.key, this.employee});
   @override
   State<AddEmployeeScreen> createState() => _AddEmployeeScreenState();
 }
 
 class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    populateFields();
+  }
+
   static const employeeRoles = [
     "Product Designer",
     "Flutter Developer",
@@ -30,8 +38,15 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Employee Details"),
+        title: Text(isEdit ? "Edit Employee Detail" : "Add Employee Details"),
         automaticallyImplyLeading: false,
+        actions: [
+          if (isEdit)
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.delete),
+            ),
+        ],
       ),
       body: Form(
         key: formKey,
@@ -39,11 +54,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 children: [
                   TextFormField(
                     controller: nameController,
-                    validator: (value)=> value!.isEmpty ? "Enter name" : null,
+                    validator: (value) => value!.isEmpty ? "Enter name" : null,
                     decoration: const InputDecoration(
                       hintText: "Employee name",
                       prefixIcon: Icon(Icons.person_outline),
@@ -54,7 +70,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                     readOnly: true,
                     controller: roleController,
                     onTap: selectEmployeeRole,
-                    validator: (value)=> value!.isEmpty ? "Select role" : null,
+                    validator: (value) => value!.isEmpty ? "Select role" : null,
                     decoration: const InputDecoration(
                       hintText: "Select role",
                       prefixIcon: Icon(Icons.work_outline),
@@ -69,7 +85,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           controller: startDateController,
                           readOnly: true,
                           onTap: pickStartDate,
-                          validator: (value)=> value!.isEmpty ? "Select start date" : null,
+                          validator: (value) =>
+                              value!.isEmpty ? "Select start date" : null,
                           decoration: const InputDecoration(
                             hintText: "Today",
                             prefixIcon: Icon(Icons.event_outlined),
@@ -106,9 +123,12 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: () {}, child: const Text("Cancel")),
+                  TextButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: const Text("Cancel"),
+                  ),
                   const SizedBox(width: 16),
-                  ElevatedButton(onPressed: () {}, child: const Text("Save")),
+                  ElevatedButton(onPressed: submit, child: const Text("Save")),
                 ],
               ),
             )
@@ -119,8 +139,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   }
 
   void submit() async {
-    if(!formKey.currentState!.validate()) return;
-    if(startDate == null) {
+    if (!formKey.currentState!.validate()) return;
+    if (startDate == null) {
       context.showErrorSnackBar("Please select a start date");
       return;
     }
@@ -193,5 +213,23 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         ).toList(),
       ),
     );
+  }
+
+  bool get isEdit => widget.employee != null;
+
+  void populateFields() {
+    if (widget.employee == null) return;
+    nameController.text = widget.employee?.employeeName ?? "";
+    roleController.text = widget.employee?.employeeRole ?? "";
+    final employeeStartDate = widget.employee?.startDate;
+    if (employeeStartDate != null) {
+      startDate = employeeStartDate;
+      startDateController.text = textFromDate(employeeStartDate);
+    }
+    final employeeEndDate = widget.employee?.endDate;
+    if (employeeEndDate != null) {
+      endDate = employeeEndDate;
+      endDateController.text = textFromDate(employeeEndDate);
+    }
   }
 }
