@@ -78,6 +78,7 @@ class CalendarDatePicker extends StatefulWidget {
     this.onDisplayedMonthChanged,
     this.initialCalendarMode = DatePickerMode.day,
     this.selectableDayPredicate,
+    this.pickerOption,
   })  : assert(initialDate != null),
         assert(firstDate != null),
         assert(lastDate != null),
@@ -129,6 +130,9 @@ class CalendarDatePicker extends StatefulWidget {
 
   /// Function to provide full control over which dates in the calendar can be selected.
   final SelectableDayPredicate? selectableDayPredicate;
+
+  /// Options for date selection
+  final PickerOption? pickerOption;
 
   @override
   State<CalendarDatePicker> createState() => _CalendarDatePickerState();
@@ -278,6 +282,10 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
     }
   }
 
+  void onOptionSelect(DateTime date) {
+    setState(() => _selectedDate = date);
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
@@ -286,6 +294,14 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24.0),
+          child: CalendarPickerOptions(
+            selectedDate: _selectedDate,
+            option: widget.pickerOption,
+            onChanged: onOptionSelect,
+          ),
+        ),
         SizedBox(
           // height: _subHeaderHeight + _maxDayPickerHeight,
           height: _maxDayPickerHeight,
@@ -306,7 +322,7 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                onPressed: ()=> Navigator.of(context).pop(_selectedDate),
+                onPressed: () => Navigator.of(context).pop(_selectedDate),
                 child: const Text("Save"),
               ),
             ],

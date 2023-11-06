@@ -21,6 +21,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
 
+  DateTime? startDate;
+  DateTime? endDate;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +75,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: endDateController,
+                        readOnly: true,
+                        onTap: pickEndDate,
                         decoration: const InputDecoration(
                           hintText: "No date",
                           prefixIcon: Icon(Icons.event_outlined),
@@ -105,8 +110,34 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     );
   }
 
-  void pickStartDate() {
-    AppDatePicker.pickDate(context);
+  void pickStartDate() async {
+    final startDate = await AppDatePicker.pickDate(
+      context,
+      pickerOption: PickerOption.full,
+    );
+    if (startDate != null) {
+      this.startDate = startDate;
+      startDateController.text = textFromDate(startDate);
+    }
+  }
+
+  void pickEndDate() async {
+    final endDate = await AppDatePicker.pickDate(
+      context,
+      pickerOption: PickerOption.limited,
+    );
+    if (endDate != null) {
+      this.endDate = endDate;
+      endDateController.text = textFromDate(endDate);
+    }
+  }
+
+  String textFromDate(DateTime date) {
+    if (date.isSameDay(DateTime.now())) {
+      return "Today";
+    } else {
+      return date.dateReadable;
+    }
   }
 
   void selectEmployeeRole() {
