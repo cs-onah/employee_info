@@ -9,8 +9,6 @@ import 'package:flutter/services.dart';
 
 import 'dart:math' as math;
 
-import 'package:intl/intl.dart' as intl;
-
 part 'calendar_picker.dart';
 part 'calendar_picker_options.dart';
 
@@ -27,35 +25,24 @@ const List<String> shortWeekdays = <String>[
 
 const firstDayOfWeekIndex = 0;
 
-final dateDisplayFormat = intl.DateFormat.yMMMd();
-
-class AppDatePicker extends StatelessWidget {
-  const AppDatePicker({super.key});
-
-  static Future<DateTime?> pickDate(
-    BuildContext context, {
-    PickerOption? pickerOption,
-    DateTime? initialDate,
-  }) async {
-    return await showDialog<DateTime?>(
-      context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: CalendarDatePicker(
-          initialDate: initialDate,
-          firstDate: DateTime(2023),
-          lastDate: DateTime(2024),
-          onDateChanged: (date) {},
-          pickerOption: pickerOption,
-        ),
+Future<DateTime?> showAppDatePicker(
+  BuildContext context, {
+  PickerOption? pickerOption,
+  DateTime? initialDate,
+}) async {
+  return await showDialog<DateTime?>(
+    context: context,
+    builder: (context) => Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+      child: CalendarDatePicker(
+        initialDate: initialDate,
+        firstDate: DateTime(2023),
+        lastDate: DateTime(2024),
+        onDateChanged: (date) {},
+        pickerOption: pickerOption,
+      ),
+    ),
+  );
 }

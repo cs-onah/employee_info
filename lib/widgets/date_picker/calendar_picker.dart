@@ -242,7 +242,6 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
           ),
         ),
         SizedBox(
-          // height: _subHeaderHeight + _maxDayPickerHeight,
           height: _maxDayPickerHeight,
           child: _MonthPicker(
             key: _monthPickerKey,
@@ -263,7 +262,7 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
             children: [
               const Icon(Icons.event_outlined),
               const SizedBox(width: 12),
-              Text(dateDisplayFormat.format(_selectedDate ?? DateTime.now())),
+              Text(_selectedDate?.dateReadable ?? "No date"),
               const Spacer(),
               TextButton(
                 onPressed: Navigator.of(context).pop,
@@ -739,7 +738,7 @@ class _MonthPickerState extends State<_MonthPicker> {
                       _isDisplayingFirstMonth ? null : _handlePreviousMonth,
                 ),
                 Text(_localizations
-                    .formatMonthYear(widget.selectedDate ?? DateTime.now())),
+                    .formatMonthYear(_currentMonth ?? DateTime.now())),
                 IconButton(
                   icon: const Icon(Icons.arrow_right),
                   color: controlColor,

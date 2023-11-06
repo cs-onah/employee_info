@@ -161,14 +161,16 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
     final bloc = context.read<EmployeeBloc>();
     if (isEdit) {
-      final employee = widget.employee!.copyWith(
+      int employeeId = widget.employee!.id;
+      final employee = Employee(
+        id: employeeId,
         employeeName: nameController.text,
         employeeRole: roleController.text,
         startDate: startDate,
         endDate: endDate,
       );
       bloc.add(EditEmployeeEvent(employee));
-      context.showSuccessSnackBar("Edited Employee Successfully");
+      context.showMessage("Employee data updated");
     } else {
       final employee = Employee.create(
         employeeName: nameController.text,
@@ -177,16 +179,16 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         endDate: endDate,
       );
       bloc.add(AddEmployeeEvent(employee));
-      context.showSuccessSnackBar("Added Employee Successfully");
+      context.showMessage("Employee data added.");
     }
     Navigator.of(context).pop();
   }
 
   void pickStartDate() async {
-    final startDate = await AppDatePicker.pickDate(
+    final startDate = await showAppDatePicker(
       context,
       pickerOption: PickerOption.full,
-      initialDate: DateTime.now(),
+      initialDate: this.startDate ?? DateTime.now(),
     );
     if (startDate != null) {
       this.startDate = startDate;
@@ -195,17 +197,17 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   }
 
   void pickEndDate() async {
-    final endDate = await AppDatePicker.pickDate(
+    final endDate = await showAppDatePicker(
       context,
       pickerOption: PickerOption.limited,
+      initialDate: this.endDate,
     );
-    if (endDate != null) {
-      this.endDate = endDate;
-      endDateController.text = textFromDate(endDate);
-    }
+    this.endDate = endDate;
+    endDateController.text = textFromDate(endDate);
   }
 
-  String textFromDate(DateTime date) {
+  String textFromDate(DateTime? date) {
+    if (date == null) return "";
     if (date.isSameDay(DateTime.now())) {
       return "Today";
     } else {
