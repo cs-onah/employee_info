@@ -1,6 +1,7 @@
 library app_date_picker;
 
 import 'package:employee_list_assessment/constants/app_colors.dart';
+import 'package:employee_list_assessment/utils/date_extension.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -31,7 +32,11 @@ final dateDisplayFormat = intl.DateFormat.yMMMd();
 class AppDatePicker extends StatelessWidget {
   const AppDatePicker({super.key});
 
-  static Future<DateTime?> pickDate(BuildContext context, {PickerOption? pickerOption, DateTime? initialDate,}) async {
+  static Future<DateTime?> pickDate(
+    BuildContext context, {
+    PickerOption? pickerOption,
+    DateTime? initialDate,
+  }) async {
     return await showDialog<DateTime?>(
       context: context,
       builder: (context) => Dialog(

@@ -17,17 +17,17 @@ extension BuildContextExt on BuildContext {
 
   double get width => MediaQuery.of(this).size.width;
 
-
   void showErrorSnackBar(dynamic error) =>
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           content: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.cancel, color: Colors.white),
               const SizedBox(width: 10),
               Expanded(
-                child: Text("$error", style: const TextStyle(color: Colors.white)),
+                child:
+                    Text("$error", style: const TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -39,7 +39,8 @@ extension BuildContextExt on BuildContext {
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           backgroundColor: Colors.black54,
-          content: Text("$message", style: const TextStyle(color: Colors.white)),
+          content:
+              Text("$message", style: const TextStyle(color: Colors.white)),
           duration: duration ?? const Duration(seconds: 1),
         ),
       );
@@ -48,12 +49,13 @@ extension BuildContextExt on BuildContext {
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
           content: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 10),
               Expanded(
-                child: Text("$message", style: const TextStyle(color: Colors.white)),
+                child: Text("$message",
+                    style: const TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -71,7 +73,6 @@ extension BuildContextExt on BuildContext {
       Navigator.of(this).popUntil((route) => route.isFirst);
 
   void pop<T>([T? result]) => Navigator.pop(this, result);
-
 
   void maybePop<T>([T? result]) => Navigator.maybePop(this, result);
 

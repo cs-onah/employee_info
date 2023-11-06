@@ -119,16 +119,3 @@ class CalendarPickerOptions extends StatelessWidget {
     );
   }
 }
-
-extension DateUtil on DateTime {
-  String get dateReadable {
-    return intl.DateFormat('d MMM yyyy').format(this);
-  }
-
-  bool isSameDay(DateTime? other) {
-    if (other != null) {
-      return dateReadable == other.dateReadable;
-    }
-    return false;
-  }
-}

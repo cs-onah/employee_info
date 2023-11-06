@@ -1,8 +1,11 @@
+import 'package:employee_list_assessment/bloc/employee_bloc.dart';
 import 'package:employee_list_assessment/constants/app_colors.dart';
 import 'package:employee_list_assessment/models/employee.dart';
 import 'package:employee_list_assessment/utils/context_extension.dart';
+import 'package:employee_list_assessment/utils/date_extension.dart';
 import 'package:employee_list_assessment/widgets/date_picker/date_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddEmployeeScreen extends StatefulWidget {
   final Employee? employee;
@@ -85,8 +88,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                           controller: startDateController,
                           readOnly: true,
                           onTap: pickStartDate,
-                          validator: (value) =>
-                              value!.isEmpty ? "Select start date" : null,
+                          // validator: (value) =>
+                          //     value!.isEmpty ? "Select start date" : null,
                           decoration: const InputDecoration(
                             hintText: "Today",
                             prefixIcon: Icon(Icons.event_outlined),
@@ -144,7 +147,32 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       context.showErrorSnackBar("Please select a start date");
       return;
     }
-    //..... Bloc
+    if (endDate != null && !(endDate!.isAfter(startDate!))) {
+      context.showErrorSnackBar("End date must be after start date");
+      return;
+    }
+
+    final bloc = context.read<EmployeeBloc>();
+    if (isEdit) {
+      final employee = widget.employee!.copyWith(
+        employeeName: nameController.text,
+        employeeRole: roleController.text,
+        startDate: startDate,
+        endDate: endDate,
+      );
+      bloc.add(EditEmployeeEvent(employee));
+      context.showSuccessSnackBar("Edited Employee Successfully");
+    } else {
+      final employee = Employee(
+        employeeName: nameController.text,
+        employeeRole: roleController.text,
+        startDate: startDate,
+        endDate: endDate,
+      );
+      bloc.add(AddEmployeeEvent(employee));
+      context.showSuccessSnackBar("Added Employee Successfully");
+    }
+    Navigator.of(context).pop();
   }
 
   void pickStartDate() async {
