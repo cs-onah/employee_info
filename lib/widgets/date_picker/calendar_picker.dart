@@ -79,30 +79,25 @@ class CalendarDatePicker extends StatefulWidget {
     this.initialCalendarMode = DatePickerMode.day,
     this.selectableDayPredicate,
     this.pickerOption,
-  })  : assert(firstDate != null),
-        assert(lastDate != null),
-        firstDate = DateUtils.dateOnly(firstDate),
+  })  : firstDate = DateUtils.dateOnly(firstDate),
         lastDate = DateUtils.dateOnly(lastDate),
-        currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()),
-        assert(onDateChanged != null),
-        assert(initialCalendarMode != null) {
+        currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()) {
     assert(
       !this.lastDate.isBefore(this.firstDate),
       'lastDate ${this.lastDate} must be on or after firstDate ${this.firstDate}.',
     );
     if (initialDate != null) {
       assert(
-        !this.initialDate!.isBefore(this.firstDate),
-        'initialDate ${this.initialDate} must be on or after firstDate ${this.firstDate}.',
+        !initialDate!.isBefore(this.firstDate),
+        'initialDate $initialDate must be on or after firstDate ${this.firstDate}.',
       );
       assert(
-        !this.initialDate!.isAfter(this.lastDate),
-        'initialDate ${this.initialDate} must be on or before lastDate ${this.lastDate}.',
+        !initialDate!.isAfter(this.lastDate),
+        'initialDate $initialDate must be on or before lastDate ${this.lastDate}.',
       );
       assert(
-        selectableDayPredicate == null ||
-            selectableDayPredicate!(this.initialDate!),
-        'Provided initialDate ${this.initialDate} must satisfy provided selectableDayPredicate.',
+        selectableDayPredicate == null || selectableDayPredicate!(initialDate!),
+        'Provided initialDate $initialDate must satisfy provided selectableDayPredicate.',
       );
     }
   }
@@ -140,18 +135,15 @@ class CalendarDatePicker extends StatefulWidget {
 
 class _CalendarDatePickerState extends State<CalendarDatePicker> {
   bool _announcedInitialDate = false;
-  late DatePickerMode _mode;
   late DateTime _currentDisplayedMonthDate;
   DateTime? _selectedDate;
   final GlobalKey _monthPickerKey = GlobalKey();
-  final GlobalKey _yearPickerKey = GlobalKey();
   late MaterialLocalizations _localizations;
   late TextDirection _textDirection;
 
   @override
   void initState() {
     super.initState();
-    _mode = widget.initialCalendarMode;
     if (widget.initialDate != null) {
       _currentDisplayedMonthDate = DateTime(
         widget.initialDate!.year,
@@ -170,9 +162,7 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
   @override
   void didUpdateWidget(CalendarDatePicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialCalendarMode != oldWidget.initialCalendarMode) {
-      _mode = widget.initialCalendarMode;
-    }
+    if (widget.initialCalendarMode != oldWidget.initialCalendarMode) {}
     if (widget.initialDate != null) {
       if (!DateUtils.isSameDay(widget.initialDate, oldWidget.initialDate)) {
         _currentDisplayedMonthDate =
@@ -220,21 +210,6 @@ class _CalendarDatePickerState extends State<CalendarDatePicker> {
         _currentDisplayedMonthDate = DateTime(date.year, date.month);
         widget.onDisplayedMonthChanged?.call(_currentDisplayedMonthDate);
       }
-    });
-  }
-
-  void _handleYearChanged(DateTime value) {
-    _vibrate();
-
-    if (value.isBefore(widget.firstDate)) {
-      value = widget.firstDate;
-    } else if (value.isAfter(widget.lastDate)) {
-      value = widget.lastDate;
-    }
-
-    setState(() {
-      _mode = DatePickerMode.day;
-      _handleMonthChanged(value);
     });
   }
 
@@ -429,11 +404,7 @@ class _MonthPicker extends StatefulWidget {
     required this.onChanged,
     required this.onDisplayedMonthChanged,
     this.selectableDayPredicate,
-  })  : assert(currentDate != null),
-        assert(onChanged != null),
-        assert(firstDate != null),
-        assert(lastDate != null),
-        assert(!firstDate.isAfter(lastDate));
+  }) : assert(!firstDate.isAfter(lastDate));
 
   /// The initial month to display.
   final DateTime initialMonth;
@@ -845,12 +816,7 @@ class _DayPicker extends StatefulWidget {
     required this.selectedDate,
     required this.onChanged,
     this.selectableDayPredicate,
-  })  : assert(currentDate != null),
-        assert(displayedMonth != null),
-        assert(firstDate != null),
-        assert(lastDate != null),
-        assert(onChanged != null),
-        assert(!firstDate.isAfter(lastDate));
+  }) : assert(!firstDate.isAfter(lastDate));
 
   /// The currently selected date.
   ///
@@ -1125,11 +1091,7 @@ class YearPicker extends StatefulWidget {
     required this.selectedDate,
     required this.onChanged,
     this.dragStartBehavior = DragStartBehavior.start,
-  })  : assert(firstDate != null),
-        assert(lastDate != null),
-        assert(selectedDate != null),
-        assert(onChanged != null),
-        assert(!firstDate.isAfter(lastDate)),
+  })  : assert(!firstDate.isAfter(lastDate)),
         currentDate = DateUtils.dateOnly(currentDate ?? DateTime.now()),
         initialDate = DateUtils.dateOnly(initialDate ?? selectedDate);
 

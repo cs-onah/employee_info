@@ -4,7 +4,10 @@ import 'package:employee_list_assessment/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() => runApp(const App());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const App());
+}
 
 class App extends StatelessWidget {
   const App({super.key});

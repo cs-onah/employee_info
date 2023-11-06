@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => AddEmployeeScreen()),
+          MaterialPageRoute(builder: (_) => const AddEmployeeScreen()),
         ),
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
