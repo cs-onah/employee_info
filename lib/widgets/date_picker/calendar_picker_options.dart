@@ -4,7 +4,7 @@ enum PickerOption { full, limited }
 
 class CalendarPickerOptions extends StatelessWidget {
   final PickerOption? option;
-  final ValueChanged<DateTime>? onChanged;
+  final ValueChanged<DateTime?>? onChanged;
   final DateTime? selectedDate;
   const CalendarPickerOptions({
     super.key,
@@ -60,9 +60,12 @@ class CalendarPickerOptions extends StatelessWidget {
       );
     }
     if (option == PickerOption.limited) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [],
+      return Row(
+        children: [
+          Expanded(child: nullOptionTile("No date")),
+          const SizedBox(width: 16),
+          Expanded(child: optionTile("Today", today)),
+        ],
       );
     }
     return const SizedBox.shrink();
@@ -91,11 +94,35 @@ class CalendarPickerOptions extends StatelessWidget {
       ),
     );
   }
+
+  Widget nullOptionTile(String text) {
+    bool isSelected = selectedDate == null;
+    return InkWell(
+      onTap: () => onChanged?.call(null),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: isSelected
+              ? AppColors.primaryBlueColor
+              : AppColors.accentBlueColor,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.white : AppColors.primaryBlueColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 extension DateUtil on DateTime {
   String get dateReadable {
-    return intl.DateFormat('dd MMM, yyyy').format(this);
+    return intl.DateFormat('d MMM yyyy').format(this);
   }
 
   bool isSameDay(DateTime? other) {

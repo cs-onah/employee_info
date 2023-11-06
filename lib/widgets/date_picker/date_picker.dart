@@ -31,7 +31,7 @@ final dateDisplayFormat = intl.DateFormat.yMMMd();
 class AppDatePicker extends StatelessWidget {
   const AppDatePicker({super.key});
 
-  static Future<DateTime?> pickDate(BuildContext context, {PickerOption? pickerOption}) async {
+  static Future<DateTime?> pickDate(BuildContext context, {PickerOption? pickerOption, DateTime? initialDate,}) async {
     return await showDialog<DateTime?>(
       context: context,
       builder: (context) => Dialog(
@@ -39,7 +39,7 @@ class AppDatePicker extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: CalendarDatePicker(
-          initialDate: DateTime.now(),
+          initialDate: initialDate,
           firstDate: DateTime(2023),
           lastDate: DateTime(2024),
           onDateChanged: (date) {},
