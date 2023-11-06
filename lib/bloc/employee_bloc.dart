@@ -13,28 +13,34 @@ class EmployeeBloc extends Bloc<EmployeeEvent, List<Employee>> {
     add(FetchEmployeeEvent()); // Initialize data from local db
   }
 
+  /// Used local var for faster UI feedback
+  List<Employee> _employees = [];
+
   void addEmployee(AddEmployeeEvent event, Emitter emit) async {
+    _employees.add(event.employee);
+    emit(List<Employee>.from(_employees));
     await storage.addEmployee(event.employee);
-    add(FetchEmployeeEvent());
   }
 
   void deleteEmployee(DeleteEmployeeEvent event, Emitter emit) async {
+    _employees.remove(event.employee);
+    emit(List<Employee>.from(_employees));
     await storage.deleteEmployee(event.employee);
-    add(FetchEmployeeEvent());
   }
 
   void editEmployee(EditEmployeeEvent event, Emitter emit) async {
+    _employees[_employees.indexOf(event.employee)] = event.employee;
+    emit(List<Employee>.from(_employees));
     await storage.addEmployee(event.employee);
-    add(FetchEmployeeEvent());
   }
 
   void fetchEmployees(_, Emitter emit) {
-    final employees = List.from(storage.employees);
-    emit(List<Employee>.from(employees));
+    _employees = List.from(storage.employees);
+    emit(List<Employee>.from(_employees));
   }
 }
 
-/// -------------- Employee Events ----------------
+/// -------------- Employee Bloc Events ----------------
 abstract class EmployeeEvent {}
 
 class FetchEmployeeEvent extends EmployeeEvent {}

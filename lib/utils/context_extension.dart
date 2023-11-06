@@ -20,18 +20,9 @@ extension BuildContextExt on BuildContext {
   void showErrorSnackBar(dynamic error) =>
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
-          content: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(Icons.cancel, color: Colors.white),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  "$error",
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+          content: Text(
+            "$error",
+            style: const TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.red,
         ),
@@ -50,16 +41,9 @@ extension BuildContextExt on BuildContext {
   void showSuccessSnackBar(dynamic message) =>
       ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
-          content: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text("$message",
-                    style: const TextStyle(color: Colors.white)),
-              ),
-            ],
+          content: Text(
+            "$message",
+            style: const TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.green,
         ),

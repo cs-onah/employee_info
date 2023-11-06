@@ -29,6 +29,7 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.employees.map((e) => e.id));
     return Scaffold(
       body: ListView(
         children: [

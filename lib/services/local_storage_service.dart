@@ -15,10 +15,11 @@ class LocalStorage {
   }
 
   Future addEmployee(Employee employee) async {
-    await _employeeBox.put(employee.id, employee);
+    await _employeeBox.put(employee.id.toString(), employee);
   }
+
   Future deleteEmployee(Employee employee) async {
-    await _employeeBox.delete(employee.id);
+    await _employeeBox.delete(employee.id.toString());
   }
 
   Future clearEmployeeStorage() async => await _employeeBox.clear();

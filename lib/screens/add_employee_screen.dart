@@ -170,7 +170,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       bloc.add(EditEmployeeEvent(employee));
       context.showSuccessSnackBar("Edited Employee Successfully");
     } else {
-      final employee = Employee(
+      final employee = Employee.create(
         employeeName: nameController.text,
         employeeRole: roleController.text,
         startDate: startDate,
