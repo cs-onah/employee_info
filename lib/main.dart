@@ -1,11 +1,13 @@
 import 'package:employee_list_assessment/bloc/employee_bloc.dart';
 import 'package:employee_list_assessment/constants/app_colors.dart';
 import 'package:employee_list_assessment/screens/home_screen.dart';
+import 'package:employee_list_assessment/services/local_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LocalStorage.init();
   runApp(const App());
 }
 

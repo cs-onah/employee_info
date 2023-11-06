@@ -1,7 +1,9 @@
 import 'package:employee_list_assessment/models/employee.dart';
+import 'package:employee_list_assessment/services/local_storage_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EmployeeBloc extends Bloc<EmployeeEvent, List<Employee>> {
+  LocalStorage storage = LocalStorage.instance;
   EmployeeBloc() : super([]) {
     on<AddEmployeeEvent>(addEmployee);
     on<EditEmployeeEvent>(editEmployee);
@@ -11,29 +13,23 @@ class EmployeeBloc extends Bloc<EmployeeEvent, List<Employee>> {
     add(FetchEmployeeEvent()); // Initialize data from local db
   }
 
-  List<Employee> employees = [];
-
-  void addEmployee(AddEmployeeEvent event, Emitter emit) {
-    // add to db
-    employees.add(event.employee);
-    emit(List<Employee>.from(employees));
+  void addEmployee(AddEmployeeEvent event, Emitter emit) async {
+    await storage.addEmployee(event.employee);
+    add(FetchEmployeeEvent());
   }
 
-  void deleteEmployee(DeleteEmployeeEvent event, Emitter emit) {
-    // add to db
-    employees.remove(event.employee);
-    emit(List<Employee>.from(employees));
+  void deleteEmployee(DeleteEmployeeEvent event, Emitter emit) async {
+    await storage.deleteEmployee(event.employee);
+    add(FetchEmployeeEvent());
   }
 
-  void editEmployee(EditEmployeeEvent event, Emitter emit) {
-    // add to db
-    employees[employees.indexOf(event.employee)] = event.employee;
-    emit(List<Employee>.from(employees));
+  void editEmployee(EditEmployeeEvent event, Emitter emit) async {
+    await storage.addEmployee(event.employee);
+    add(FetchEmployeeEvent());
   }
 
   void fetchEmployees(_, Emitter emit) {
-    // fetch from db
-    employees = List.from([]);
+    final employees = List.from(storage.employees);
     emit(List<Employee>.from(employees));
   }
 }
