@@ -46,7 +46,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         actions: [
           if (isEdit)
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                if (widget.employee == null) return;
+                context
+                    .read<EmployeeBloc>()
+                    .add(DeleteEmployeeEvent(widget.employee!));
+                context.showMessage("Employee data has been deleted.");
+                context.pop();
+              },
               icon: const Icon(Icons.delete),
             ),
         ],

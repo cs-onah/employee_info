@@ -1,6 +1,7 @@
 import 'package:employee_list_assessment/bloc/employee_bloc.dart';
 import 'package:employee_list_assessment/constants/app_colors.dart';
 import 'package:employee_list_assessment/models/employee.dart';
+import 'package:employee_list_assessment/screens/add_employee_screen.dart';
 import 'package:employee_list_assessment/utils/context_extension.dart';
 import 'package:employee_list_assessment/utils/date_extension.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +16,13 @@ class EmployeeListScreen extends StatefulWidget {
 }
 
 class _EmployeeListScreenState extends State<EmployeeListScreen> {
-  /// Current employees do not have end date, or have end dates after today
+  /// Employees that do not have end date, or have end dates after today
   List<Employee> get currentEmployees => widget.employees.where((element) {
         return element.endDate == null ||
             element.endDate!.isAfter(DateTime.now());
       }).toList();
 
+  /// Employees that are not in [currentEmployees]
   List<Employee> get prevEmployees => widget.employees
       .where((element) => !currentEmployees.contains(element))
       .toList();
@@ -63,48 +65,71 @@ class _EmployeeListScreenState extends State<EmployeeListScreen> {
         ...employees.map(
           (employee) {
             return Dismissible(
+              confirmDismiss: (direction) async =>
+                  direction == DismissDirection.endToStart,
               onDismissed: (direction) {
-                context.read<EmployeeBloc>().add(DeleteEmployeeEvent(employee));
-                context.showErrorSnackBar("Deleted Employee");
+                if (direction == DismissDirection.endToStart) {
+                  context
+                      .read<EmployeeBloc>()
+                      .add(DeleteEmployeeEvent(employee));
+                  context.showMessage("Employee data has been deleted.");
+                }
               },
+              background: Container(
+                color: Colors.red,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: const [
+                    Icon(Icons.delete_outline, color: Colors.white),
+                  ],
+                ),
+              ),
               key: Key(employee.id.toString()),
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(),
-                    Text(
-                      employee.employeeName ?? "--",
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      employee.employeeRole ?? "--",
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    const SizedBox(height: 6),
-                    Builder(builder: (_) {
-                      if (employee.startDate != null &&
-                          employee.endDate != null) {
-                        return Text(
-                          "${employee.startDate.dateReadableWithComma} - ${employee.endDate.dateReadableWithComma}",
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        );
-                      }
-
-                      return Text(
-                        "From ${employee.startDate.dateReadableWithComma}",
+              child: InkWell(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => AddEmployeeScreen(employee: employee)),
+                ),
+                child: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(),
+                      Text(
+                        employee.employeeName ?? "--",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        employee.employeeRole ?? "--",
                         style:
                             const TextStyle(color: Colors.grey, fontSize: 14),
-                      );
-                    }),
-                  ],
+                      ),
+                      const SizedBox(height: 6),
+                      Builder(builder: (_) {
+                        if (employee.startDate != null &&
+                            employee.endDate != null) {
+                          return Text(
+                            "${employee.startDate.dateReadableWithComma} - ${employee.endDate.dateReadableWithComma}",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          );
+                        }
+
+                        return Text(
+                          "From ${employee.startDate.dateReadableWithComma}",
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
             );
